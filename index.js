@@ -1,20 +1,27 @@
 const express = require("express");
-const cors = require("cors");
+const app = express();
+
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const useRouter = require("./Routes/auth");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const app = express();
+// Middleware
+app.use(bodyParser.json());
+const cors = require("cors");
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+app.use("/auth", useRouter);
 
-app.use(cors());
-
-app.use("/auth", cors(), useRouter);
-console.log("process.env.MONGODB_PASS ====>", process.env.MONGODB_PASS);
 mongoose
   .connect(
-    `mongodb+srv://nilesh7874:${process.env.MONGODB_PASS}@mycluster.ypdwtyg.mongodb.net/recipeapp`,
+    `mongodb+srv://ratna1234:${process.env.MONGODB_PASS}@cluster0.ehiha.mongodb.net/`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
