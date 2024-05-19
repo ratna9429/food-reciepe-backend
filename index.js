@@ -3,25 +3,27 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const useRouter = require("./Routes/auth");
 const cookieParser = require("cookie-parser");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express();
 
-app.use(cookieParser());
-app.use(express.json());
 app.use(cors());
-app.use("/auth", useRouter);
 
+app.use("/auth", cors(), useRouter);
+console.log("process.env.MONGODB_PASS ====>", process.env.MONGODB_PASS);
 mongoose
   .connect(
-    "mongodb+srv://nilesh7874:mongodb123@mycluster.ypdwtyg.mongodb.net/recipeapp",
+    `mongodb+srv://nilesh7874:${process.env.MONGODB_PASS}@mycluster.ypdwtyg.mongodb.net/recipeapp`,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
     console.log("MongoDB Connected");
-    app.listen(3001, () => {
-      console.log("Server Started on port 3001");
-    });
   })
   .catch((error) => {
     console.error("MongoDB Connection Error:", error);
   });
+
+app.listen(3001, () => {
+  console.log("Server Started on port 3001");
+});
